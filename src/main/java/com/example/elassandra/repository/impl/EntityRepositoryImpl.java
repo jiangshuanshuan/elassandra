@@ -135,7 +135,7 @@ public class EntityRepositoryImpl implements EntityRepository {
 	}
 
 	@Override
-	public <T> List<SearchResult.Hit<T, Void>> createSearch(String keyWord, String type, T o, String... fields) {
+	public <T> List<SearchResult.Hit<T, Void>> createSearch(String keyWord, String index, T o, String... fields) {
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 		searchSourceBuilder.query(QueryBuilders.queryStringQuery(keyWord));
 		HighlightBuilder highlightBuilder = new HighlightBuilder();
@@ -145,14 +145,16 @@ public class EntityRepositoryImpl implements EntityRepository {
 		highlightBuilder.preTags("<em>").postTags("</em>");//高亮标签
 		highlightBuilder.fragmentSize(200);//高亮内容长度
 		searchSourceBuilder.highlighter(highlightBuilder);
-		Search search = new Search.Builder(searchSourceBuilder.toString()).addIndex(type).build();
+		Search search = new Search.Builder(searchSourceBuilder.toString()).addIndex(index).build();
 		SearchResult result = null ;
 		List<?> hits = null ;
 		try {
 			result = jestClient.execute(search);
 			System.out.println("本次查询共查到："+result.getTotal()+"个结果！");
-
-			hits = result.getHits(o.getClass());
+			System.out.println("all string="+result.getJsonString());
+			System.out.println("_source="+result.getSourceAsString());
+			System.out.println("_id="+result.getHits(Entity.class).get(0).id);
+			hits = result.getHits(Entity.class);
 
 		} catch (IOException e) {
 			e.printStackTrace();

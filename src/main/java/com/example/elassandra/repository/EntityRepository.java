@@ -41,5 +41,5 @@ public interface EntityRepository {
 	 * @param keyWord ：搜索关键字
 	 * @return
 	 */
-	public <T> List<SearchResult.Hit<T,Void>> createSearch(String keyWord , String type , T o , String... fields) ;
+	public <T> List<SearchResult.Hit<T,Void>> createSearch(String keyWord , String index , T o , String... fields) ;
 }

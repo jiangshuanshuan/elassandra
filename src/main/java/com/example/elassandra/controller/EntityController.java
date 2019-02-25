@@ -112,4 +112,10 @@ public class EntityController {
 		return null;
 	}
 
+	//http://localhost:8888/createSearch?keyWord=%E5%8D%97%E4%BA%AC&field=name
+	@RequestMapping(value="/createSearch", method=RequestMethod.GET)
+	public Object createSearch(@RequestParam String keyWord  ,@RequestParam String field){
+		return cityESService.createSearch(keyWord,Entity.INDEX_NAME,Object.class,field);
+	}
+
 }
